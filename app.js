@@ -1,5 +1,6 @@
-const model = require("../model/sql-query-model.js")
+const controller = require("./controller/sql-query-controller.js")
 const express = require("express");
+
 const app = express();
 
 /*
@@ -11,11 +12,7 @@ description
 -------------------
 */
 
-app.get("/api/topics", async(req, res) => 
-{
-    const allTopics = await model.getAllTopics();
-    res.json(allTopics);
-})
+app.get("/api/topics", controller.getAllTopics)
 
 app.listen(5000, ()=>
 {
