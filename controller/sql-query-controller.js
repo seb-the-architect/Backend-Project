@@ -14,7 +14,7 @@ exports.getArticle = async function(req, res, next)
     if(/^[0-9]+$/.test(req.params.article_id)) 
     { 
         const article = await model.queryArticle(req.params.article_id)
-        try { res.status(200).send({"article": article}) } 
+        try { res.status(article === undefined ? 404 : 200).send({"article": article}) } 
         catch (err) { next(err) } 
     }
     else {

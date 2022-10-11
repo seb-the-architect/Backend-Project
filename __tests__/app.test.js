@@ -52,10 +52,10 @@ describe("GET /api/articles/:article_id", () => {
             )
     })
 
-    test('Expect empty object when querying numerical, non-existent article_id.', () => {
+    test('Expect empty object when querying numerical, non-existent article_id with status 404', () => {
         return request(app)
             .get("/api/articles/1337")
-            .expect(200)
+            .expect(404)
             .then((response) => {
                 expect(response.body).toStrictEqual({});
             }
