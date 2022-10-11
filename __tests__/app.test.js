@@ -62,3 +62,21 @@ describe("GET /api/articles/:article_id", () => {
             )
     })
 });
+
+describe("GET /api/users", () => {
+    test('Every element in the returned array is an object, containing username, name and avatar_url as properties', () => {
+        return request(app)
+            .get("/api/users")
+            .expect(200)
+            .then((response) => {
+                expect(response.body.users.length === 4);
+                for (let eachObject of response.body.users) {
+                    expect(eachObject)
+                        .toEqual(expect.objectContaining({ 
+                            username: expect.any(String), 
+                            name: expect.any(String),
+                            avatar_url: expect.any(String) }));
+                }
+            });
+    });
+});
