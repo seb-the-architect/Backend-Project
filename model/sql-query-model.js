@@ -13,7 +13,8 @@ exports.queryArticle = async function(id)
     FROM articles
     LEFT JOIN users
     ON articles.author=users.username
-    WHERE article_id=$1;`, [id])
+    WHERE article_id=$1;`, [id]);
 
     return article.rows[0];
 }
+
