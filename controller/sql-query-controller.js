@@ -22,3 +22,10 @@ exports.getArticle = async function(req, res, next)
         catch (err) { next(err) }
     }
 }
+
+exports.getAllUsers = async function(req, res, next)
+{
+    const allUsers = await model.queryAllUsers();
+    try { res.status(200).send({"users": allUsers}) } 
+    catch (err) { next(err) }
+}

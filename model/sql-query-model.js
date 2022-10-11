@@ -18,3 +18,8 @@ exports.queryArticle = async function(id)
     return article.rows[0];
 }
 
+exports.queryAllUsers = async function()
+{
+    const allUsers = await pool.query("SELECT * FROM users");
+    return allUsers.rows;
+}
