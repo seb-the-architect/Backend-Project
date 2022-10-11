@@ -3,7 +3,8 @@ const express = require("express");
 
 const app = express();
 
-app.get("/api/topics", controller.getAllTopics)
+app.get("/api/topics", controller.getAllTopics);
+app.get("/api/articles/:article_id", controller.getArticle);
 
 app.listen(5000, ()=>
 {
