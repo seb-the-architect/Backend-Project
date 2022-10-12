@@ -101,10 +101,20 @@ describe("PATCH /api/articles/:article_id", () => {
             });
     });
 
-    test('Returns user-friendly error if the request body is not of the desired format."', () => {
+    test('Returns user-friendly error if the request body key is not of the desired format."', () => {
         return request(app)
             .patch("/api/articles/5")
             .send({"ic_votes": 20})
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).toEqual("Bad request. Is the request body of the form {inc_votes: *Number*}?");
+            });
+    });
+
+    test('Returns user-friendly error if the request body value is not of the desired format."', () => {
+        return request(app)
+            .patch("/api/articles/5")
+            .send({"inc_votes": "20"})
             .expect(400)
             .then((response) => {
                 expect(response.body.error).toEqual("Bad request. Is the request body of the form {inc_votes: *Number*}?");
