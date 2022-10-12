@@ -80,3 +80,55 @@ describe("GET /api/users", () => {
             });
     });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+    test('Returned object contains keys: "article_id", "title", "topic", "author", "body", "created_at", "votes"', () => {
+        return request(app)
+            .patch("/api/articles/5")
+            .send({"inc_votes": 20})
+            .expect(200)
+            .then((response) => {
+                expect(response.body.article).toEqual(expect.objectContaining(
+                    {
+                        article_id: expect.any(Number),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        votes: expect.any(Number)
+                    }));
+            });
+    });
+
+    test('Returns user-friendly error if the request body key is not of the desired format."', () => {
+        return request(app)
+            .patch("/api/articles/5")
+            .send({"ic_votes": 20})
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).toEqual("Bad request. Is the request body of the form {inc_votes: *Number*}?");
+            });
+    });
+
+    test('Returns user-friendly error if the request body value is not of the desired format."', () => {
+        return request(app)
+            .patch("/api/articles/5")
+            .send({"inc_votes": "20"})
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).toEqual("Bad request. Is the request body of the form {inc_votes: *Number*}?");
+            });
+    });
+
+    test('Expect empty object when querying numerical, non-existent article_id with status 404', () => {
+        return request(app)
+            .patch("/api/articles/1337")
+            .send({"inc_votes": 20})
+            .expect(404)
+            .then((response) => {
+                expect(response.body).toStrictEqual({});
+            }
+            )
+    })
+});
