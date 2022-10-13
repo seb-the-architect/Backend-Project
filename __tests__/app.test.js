@@ -34,7 +34,7 @@ describe("GET /api/articles/:article_id", () => {
                         article_id: expect.any(Number),
                         title: expect.any(String),
                         topic: expect.any(String),
-                        name: expect.any(String),
+                        author: expect.any(String),
                         created_at: expect.any(String),
                         votes: expect.any(Number)
                     }));
@@ -128,6 +128,29 @@ describe("PATCH /api/articles/:article_id", () => {
             .expect(404)
             .then((response) => {
                 expect(response.body).toStrictEqual({});
+            }
+            )
+    })
+});
+
+describe("Articles are returned with new 'comment_count' property.", () => {
+    test('Returned object has key:"comment_count" when GETting" ', () => {
+        return request(app)
+            .get("/api/articles/5")
+            .expect(200)
+            .then((response) => {
+                expect(response.body.article.comment_count === undefined).toEqual(false);
+            }
+            )
+    })
+
+    test('Returned object has key:"comment_count" when PATCHing', () => {
+        return request(app)
+            .patch("/api/articles/1")
+            .send({"inc_votes": 20})
+            .expect(200)
+            .then((response) => {
+                expect(response.body.article.comment_count === undefined).toEqual(false);
             }
             )
     })
