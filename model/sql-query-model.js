@@ -39,9 +39,10 @@ exports.queryPatchArticle = async function(id, incrObject)
 exports.queryAllComments = async function(article_id)
 {
     const allComments = await pool.query(`
-    SELECT article_id
+    SELECT comment_id, votes, created_at, author, body
     FROM comments
-    WHERE article_id=$1`, [article_id]);
+    WHERE article_id=$1
+    ORDER BY created_at ASC`, [article_id]);
 
     return allComments.rows;
 }
@@ -51,4 +52,9 @@ exports.queryAllArticles = async function(topic)
     const allArticles = await pool.query(
         format("SELECT * FROM articles %s", (topic ? `WHERE topic='${topic}'` : "")));
     return allArticles.rows;
+}
+
+exports.postNewComment = async function(newComment)
+{
+    
 }

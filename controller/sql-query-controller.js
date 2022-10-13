@@ -48,3 +48,10 @@ exports.getAllArticles = async function (req, res, next) {
     try { res.status(200).send({ "articles": allArticles }) }
     catch (err) { next(err) }
 }
+
+exports.getAllComments = async function (req, res, next)
+{
+    const allComments = await model.queryAllComments(req.params.article_id);
+    try { res.status(200).send({ "comments": allComments }) }
+    catch (err) { next(err) }
+}
