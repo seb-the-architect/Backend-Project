@@ -53,3 +53,8 @@ exports.queryAllArticles = async function(topic)
         format("SELECT * FROM articles %s", (topic ? `WHERE topic='${topic}'` : "")));
     return allArticles.rows;
 }
+
+exports.postNewComment = async function(newComment)
+{
+    
+}
