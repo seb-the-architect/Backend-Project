@@ -163,7 +163,7 @@ describe("GET /api/articles", () => {
             .get("/api/articles")
             .expect(200)
             .then((response) => {
-                expect(response.body.articles.length === 12);
+                expect(response.body.articles.length).toEqual(12);
                 for (let eachObject of response.body.articles) {
                     expect(eachObject).toEqual(expect.objectContaining(
                         {
@@ -185,7 +185,7 @@ describe("GET /api/articles", () => {
             .query({ topic: 'cats' })
             .expect(200)
             .then((response) => {
-                expect(response.body.articles.length === 1);
+                expect(response.body.articles.length).toEqual(1);
                 console.log(response.body);
                 for (let eachObject of response.body.articles) {
                     expect(eachObject.topic).toEqual("cats");
