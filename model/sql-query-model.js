@@ -1,4 +1,5 @@
 const pool = require("../db/connection.js")
+const format = require("pg-format");
 
 exports.queryAllTopics = async function()
 {
@@ -45,8 +46,9 @@ exports.queryAllComments = async function(article_id)
     return allComments.rows;
 }
 
-exports.queryAllArticles = async function()
+exports.queryAllArticles = async function(topic)
 {
-    const allArticles = await pool.query("SELECT * FROM articles");
+    const allArticles = await pool.query(
+        format("SELECT * FROM articles %s", (topic ? `WHERE topic='${topic}'` : "")));
     return allArticles.rows;
 }

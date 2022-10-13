@@ -178,4 +178,18 @@ describe("GET /api/articles", () => {
                 }
             });
     });
+
+    test(`If a topic query is specified, all articles are filtered by it.`, () => {
+        return request(app)
+            .get("/api/articles")
+            .query({ topic: 'cats' })
+            .expect(200)
+            .then((response) => {
+                expect(response.body.articles.length === 1);
+                console.log(response.body);
+                for (let eachObject of response.body.articles) {
+                    expect(eachObject.topic).toEqual("cats");
+                }
+            });
+    });
 });
