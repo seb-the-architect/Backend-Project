@@ -163,7 +163,7 @@ describe("GET /api/articles", () => {
             .get("/api/articles")
             .expect(200)
             .then((response) => {
-                expect(response.body.articles.length === 12);
+                expect(response.body.articles.length).toEqual(12);
                 for (let eachObject of response.body.articles) {
                     expect(eachObject).toEqual(expect.objectContaining(
                         {
@@ -175,6 +175,20 @@ describe("GET /api/articles", () => {
                             votes: expect.any(Number),
                             body: expect.any(String)
                         }));
+                }
+            });
+    });
+
+    test(`If a topic query is specified, all articles are filtered by it.`, () => {
+        return request(app)
+            .get("/api/articles")
+            .query({ topic: 'cats' })
+            .expect(200)
+            .then((response) => {
+                expect(response.body.articles.length).toEqual(1);
+                console.log(response.body);
+                for (let eachObject of response.body.articles) {
+                    expect(eachObject.topic).toEqual("cats");
                 }
             });
     });
