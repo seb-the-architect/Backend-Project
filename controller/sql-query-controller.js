@@ -42,3 +42,9 @@ exports.patchArticle = async function (req, res, next) {
         catch (err) { next(err) }
     }
 }
+
+exports.getAllArticles = async function (req, res, next) {
+    const allArticles = await model.queryAllArticles(req.query.topic);
+    try { res.status(200).send({ "articles": allArticles }) }
+    catch (err) { next(err) }
+}
