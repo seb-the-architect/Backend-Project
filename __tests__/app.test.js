@@ -73,10 +73,11 @@ describe("GET /api/users", () => {
                 expect(response.body.users.length === 4);
                 for (let eachObject of response.body.users) {
                     expect(eachObject)
-                        .toEqual(expect.objectContaining({ 
-                            username: expect.any(String), 
+                        .toEqual(expect.objectContaining({
+                            username: expect.any(String),
                             name: expect.any(String),
-                            avatar_url: expect.any(String) }));
+                            avatar_url: expect.any(String)
+                        }));
                 }
             });
     });
@@ -86,7 +87,7 @@ describe("PATCH /api/articles/:article_id", () => {
     test('Returned object contains keys: "article_id", "title", "topic", "author", "body", "created_at", "votes"', () => {
         return request(app)
             .patch("/api/articles/5")
-            .send({"inc_votes": 20})
+            .send({ "inc_votes": 20 })
             .expect(200)
             .then((response) => {
                 expect(response.body.article).toEqual(expect.objectContaining(
@@ -105,7 +106,7 @@ describe("PATCH /api/articles/:article_id", () => {
     test('Returns user-friendly error if the request body key is not of the desired format."', () => {
         return request(app)
             .patch("/api/articles/5")
-            .send({"ic_votes": 20})
+            .send({ "ic_votes": 20 })
             .expect(400)
             .then((response) => {
                 expect(response.body.error).toEqual("Bad request. Is the request body of the form {inc_votes: *Number*}?");
@@ -115,7 +116,7 @@ describe("PATCH /api/articles/:article_id", () => {
     test('Returns user-friendly error if the request body value is not of the desired format."', () => {
         return request(app)
             .patch("/api/articles/5")
-            .send({"inc_votes": "20"})
+            .send({ "inc_votes": "20" })
             .expect(400)
             .then((response) => {
                 expect(response.body.error).toEqual("Bad request. Is the request body of the form {inc_votes: *Number*}?");
@@ -125,7 +126,7 @@ describe("PATCH /api/articles/:article_id", () => {
     test('Expect empty object when querying numerical, non-existent article_id with status 404', () => {
         return request(app)
             .patch("/api/articles/1337")
-            .send({"inc_votes": 20})
+            .send({ "inc_votes": 20 })
             .expect(404)
             .then((response) => {
                 expect(response.body).toStrictEqual({});
@@ -148,7 +149,7 @@ describe("Articles are returned with new 'comment_count' property.", () => {
     test('Returned object has key:"comment_count" when PATCHing', () => {
         return request(app)
             .patch("/api/articles/1")
-            .send({"inc_votes": 20})
+            .send({ "inc_votes": 20 })
             .expect(200)
             .then((response) => {
                 expect(response.body.article.comment_count === undefined).toEqual(false);
@@ -219,6 +220,66 @@ describe("GET /api/articles/:article_id/comments", () => {
             .expect(200)
             .then((response) => {
                 expect(response.body.comments.length).toEqual(0);
+            });
+    });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+    test(`Return is an object, with keys: comment_id, votes, created_at, author, body`, () => {
+        return request(app)
+            .post("/api/articles/1/comments")
+            .send({ "username": "lurker", "body": "new sauce" })
+            .expect(200)
+            .then((response) => {
+                expect(response.body.comment).toEqual(expect.objectContaining(
+                    {
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        article_id: expect.any(Number)
+                    }));
+            });
+    });
+
+    test(`Bad request message sent when body property doesnt exist in request body.`, () => {
+        return request(app)
+            .post("/api/articles/1/comments")
+            .send({ "username": "lurker", "bodyyy": "new sauce" })
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).not.toBe(undefined);
+            });
+    });
+
+    test(`Bad request message sent when username property doesnt exist in request body.`, () => {
+        return request(app)
+            .post("/api/articles/1/comments")
+            .send({ "usernameee": "lurker", "body": "new sauce" })
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).not.toBe(undefined);
+            });
+    });
+
+    test(`Bad request message sent when article number doesnt exist in articles.`, () => {
+        return request(app)
+            .post("/api/articles/1337/comments")
+            .send({ "username": "lurker", "body": "new sauce" })
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).not.toBe(undefined);
+            });
+    });
+
+    test(`Bad request message sent when username doesnt exist users.`, () => {
+        return request(app)
+            .post("/api/articles/1/comments")
+            .send({ "username": "alwaysalurker", "body": "new sauce" })
+            .expect(400)
+            .then((response) => {
+                expect(response.body.error).not.toBe(undefined);
             });
     });
 });
