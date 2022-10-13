@@ -10,6 +10,7 @@ app.get("/api/articles/:article_id", controller.getArticle);
 app.get("/api/users", controller.getAllUsers);
 app.patch("/api/articles/:article_id", controller.patchArticle);
 app.get("/api/articles", controller.getAllArticles);
+app.get("/api/articles/:article_id/comments", controller.getAllComments);
 
 app.use((err, req, res, next) => {
     console.error(err);
