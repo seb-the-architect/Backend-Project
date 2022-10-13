@@ -9,7 +9,7 @@ exports.queryAllTopics = async function()
 exports.queryArticle = async function(id)
 {
     const article = await pool.query(`
-    SELECT article_id, title, topic, users.name, created_at, votes
+    SELECT article_id, title, topic, users.name as author, created_at, votes, body
     FROM articles
     LEFT JOIN users
     ON articles.author=users.username
@@ -33,4 +33,14 @@ exports.queryPatchArticle = async function(id, incrObject)
     RETURNING *`, [incrObject.inc_votes, id]);
 
     return patchedArticle.rows[0];
+}
+
+exports.queryAllComments = async function(article_id)
+{
+    const allComments = await pool.query(`
+    SELECT article_id
+    FROM comments
+    WHERE article_id=$1`, [article_id]);
+
+    return allComments.rows;
 }

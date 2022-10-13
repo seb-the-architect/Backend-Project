@@ -10,7 +10,9 @@ exports.getAllTopics = async function (req, res, next) {
 exports.getArticle = async function (req, res, next) {
     //If the id consists only of numbers (input validation / injection prevention)
     if (/^[0-9]+$/.test(req.params.article_id)) {
-        const article = await model.queryArticle(req.params.article_id)
+        const article = await model.queryArticle(req.params.article_id);
+        const comment_count = (await model.queryAllComments(req.params.article_id)).length;
+        if(article) { article["comment_count"] = comment_count; }
         try { res.status(article === undefined ? 404 : 200).send({ "article": article }) }
         catch (err) { next(err) }
     }
@@ -30,6 +32,8 @@ exports.patchArticle = async function (req, res, next) {
     //Check that the request body has the desired format.
     if (req.body.inc_votes === undefined ? false : typeof (req.body.inc_votes) === "number") {
         const patchedArticle = await model.queryPatchArticle(req.params.article_id, req.body);
+        const comment_count = (await model.queryAllComments(req.params.article_id)).length;
+        if(patchedArticle) { patchedArticle["comment_count"] = comment_count; }
         try { res.status(patchedArticle === undefined ? 404 : 200).send({ "article": patchedArticle }) }
         catch (err) { next(err) }
     }
