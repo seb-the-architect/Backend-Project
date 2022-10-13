@@ -44,3 +44,9 @@ exports.queryAllComments = async function(article_id)
 
     return allComments.rows;
 }
+
+exports.queryAllArticles = async function()
+{
+    const allArticles = await pool.query("SELECT * FROM articles");
+    return allArticles.rows;
+}

@@ -24,7 +24,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("GET /api/articles/:article_id", () => {
-    test('Returned value is an object with keys: article_id, title, topic, name, created_at, votes', () => {
+    test('Returned value is an object with keys: article_id, title, topic, author, created_at, votes, body', () => {
         return request(app)
             .get("/api/articles/5")
             .expect(200)
@@ -36,7 +36,8 @@ describe("GET /api/articles/:article_id", () => {
                         topic: expect.any(String),
                         author: expect.any(String),
                         created_at: expect.any(String),
-                        votes: expect.any(Number)
+                        votes: expect.any(Number),
+                        body: expect.any(String)
                     }));
             }
             )
@@ -154,4 +155,27 @@ describe("Articles are returned with new 'comment_count' property.", () => {
             }
             )
     })
+});
+
+describe("GET /api/articles", () => {
+    test(`Every element in the returned array is an object, with keys: comment_count, article_id, title, topic, author, created_at, votes, body`, () => {
+        return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then((response) => {
+                expect(response.body.articles.length === 12);
+                for (let eachObject of response.body.articles) {
+                    expect(eachObject).toEqual(expect.objectContaining(
+                        {
+                            article_id: expect.any(Number),
+                            title: expect.any(String),
+                            topic: expect.any(String),
+                            author: expect.any(String),
+                            created_at: expect.any(String),
+                            votes: expect.any(Number),
+                            body: expect.any(String)
+                        }));
+                }
+            });
+    });
 });
