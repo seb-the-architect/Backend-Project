@@ -11,6 +11,7 @@ app.get("/api/users", controller.getAllUsers);
 app.patch("/api/articles/:article_id", controller.patchArticle);
 app.get("/api/articles", controller.getAllArticles);
 app.get("/api/articles/:article_id/comments", controller.getAllComments);
+app.post("/api/articles/:article_id/comments", controller.postNewComment);
 
 app.use((err, req, res, next) => {
     console.error(err);

@@ -42,7 +42,7 @@ exports.queryAllComments = async function(article_id)
     SELECT comment_id, votes, created_at, author, body
     FROM comments
     WHERE article_id=$1
-    ORDER BY created_at ASC`, [article_id]);
+    ORDER BY created_at DESC`, [article_id]);
 
     return allComments.rows;
 }
@@ -54,7 +54,13 @@ exports.queryAllArticles = async function(topic)
     return allArticles.rows;
 }
 
-exports.postNewComment = async function(newComment)
+exports.queryPostNewComment = async function(article_id, newComment)
 {
+    const postedComment = await pool.query(
+        format(`
+        INSERT INTO comments (body, author, article_id)
+        VALUES ('%s', '%s', %s)
+        RETURNING *;`, newComment.body, newComment.username, article_id));
     
+        return postedComment.rows[0];
 }
