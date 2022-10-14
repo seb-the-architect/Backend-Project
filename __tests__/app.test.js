@@ -283,3 +283,46 @@ describe("POST /api/articles/:article_id/comments", () => {
             });
     });
 });
+
+//But with sort_by and order and topic
+describe("GET /api/articles", () => {
+    test(`Successfull with no query parameters`, () => {
+        return request(app).get("/api/articles").expect(200)
+    });
+
+    test(`Successfull with sort_by parameter`, () => {
+        return request(app).get("/api/articles").query({ sort_by: 'author' }).expect(200);
+    });
+
+    test(`Successfull with order parameter`, () => {
+        return request(app).get("/api/articles").query({ order: 'DESC' }).expect(200);
+    });
+
+    test(`Successfull with topic parameter`, () => {
+        return request(app).get("/api/articles").query({ topic: 'cats' }).expect(200);
+    });
+
+    test(`Unsuccessfull with bad topic parameter`, () => {
+        return request(app).get("/api/articles").query({ topic: 'bananas' }).expect(404).then((response) => {
+            expect(response.body.error).toBe("Ensure that the topic exists.");
+        });;
+    });
+
+    test(`Unsuccessfull with bad sort_by parameter`, () => {
+        return request(app).get("/api/articles").query({ sort_by: 'bananas' }).expect(400).then((response) => {
+            expect(response.body.error).toBe("Ensure that the property you are trying to sort_by exists.");
+        });;
+    });
+
+    test(`Unsuccessfull with bad order parameter`, () => {
+        return request(app).get("/api/articles").query({ order: 'bananas' }).expect(400).then((response) => {
+            expect(response.body.error).toBe("The order can only be ASC or DESC");
+        });;
+    });
+
+    test(`Successfull where topic does not exist in articles.`, () => {
+        return request(app).get("/api/articles").query({ topic: 'paper' }).expect(200).then((response) => {
+            expect(response.body.articles).toStrictEqual([]);
+        });;
+    });
+});
