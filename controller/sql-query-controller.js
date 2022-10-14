@@ -44,9 +44,33 @@ exports.patchArticle = async function (req, res, next) {
 }
 
 exports.getAllArticles = async function (req, res, next) {
-    const allArticles = await model.queryAllArticles(req.query.topic);
+    const allTopics = await model.queryAllTopics();
+    if(!(allTopics.map(eachTopic => eachTopic.slug)).includes(req.query.topic) && req.query.topic)
+    {
+        try { res.status(404).send({ "error": "Ensure that the topic exists." }) }
+        catch (err) { next(err) }
+        return;
+    }
+    else if(!Object.keys((await model.queryAllArticles())[0]).includes(req.query.sort_by) && req.query.sort_by)
+    {
+        try { res.status(400).send({ "error": "Ensure that the property you are trying to sort_by exists." }) }
+        catch (err) { next(err) }
+        return;
+    }
+    if(req.query.order)
+    {
+        console.log(req.query.order.toLowerCase());
+        if(req.query.order.toLowerCase() !== "asc" && req.query.order.toLowerCase() !== "desc")
+        {
+            try { res.status(400).send({ "error": "The order can only be ASC or DESC" }) }
+            catch (err) { next(err) }
+            return;
+        }
+    }
+    const allArticles = await model.queryAllArticles(req.query.topic, req.query.sort_by, req.query.order);
     try { res.status(200).send({ "articles": allArticles }) }
     catch (err) { next(err) }
+    return;
 }
 
 exports.getAllComments = async function (req, res, next) {
@@ -64,15 +88,18 @@ exports.postNewComment = async function (req, res, next) {
         &&
         ((allUsers.filter(eachUser => eachUser.username === req.body.username)).length !== 0)
         &&
-        req.body.body)
-    {
+        req.body.body) {
         const newComment = await model.queryPostNewComment(req.params.article_id, req.body)
         try { res.status(201).send({ "comment": newComment }) }
         catch (err) { next(err) }
     }
     else {
-        try { res.status(400).send({ "error": 
-        "Bad request. Make sure: The request body has properties username and body AND the article_id and username exist in articles and users respectively." }) }
+        try {
+            res.status(400).send({
+                "error":
+                    "Bad request. Make sure: The request body has properties username and body AND the article_id and username exist in articles and users respectively."
+            })
+        }
         catch (err) { next(err) }
     }
 }
