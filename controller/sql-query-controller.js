@@ -56,19 +56,18 @@ exports.getAllComments = async function (req, res, next) {
 }
 
 exports.postNewComment = async function (req, res, next) {
-    const allArticles = await model.queryAllArticles();
+    const article = await model.queryArticle(req.params.article_id);
     const allUsers = await model.queryAllUsers();
-
     //If the article_id is present in the articles table and the username is present in users table
     // AND if properties username and body exist in the request body
-    if (((allArticles.filter(eachArticle => eachArticle.article_id == req.params.article_id)).length !== 0)
+    if (article !== undefined
         &&
         ((allUsers.filter(eachUser => eachUser.username === req.body.username)).length !== 0)
         &&
         req.body.body)
     {
         const newComment = await model.queryPostNewComment(req.params.article_id, req.body)
-        try { res.status(200).send({ "comment": newComment }) }
+        try { res.status(201).send({ "comment": newComment }) }
         catch (err) { next(err) }
     }
     else {

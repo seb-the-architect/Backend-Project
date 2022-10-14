@@ -229,7 +229,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         return request(app)
             .post("/api/articles/1/comments")
             .send({ "username": "lurker", "body": "new sauce" })
-            .expect(200)
+            .expect(201)
             .then((response) => {
                 expect(response.body.comment).toEqual(expect.objectContaining(
                     {
@@ -249,7 +249,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             .send({ "username": "lurker", "bodyyy": "new sauce" })
             .expect(400)
             .then((response) => {
-                expect(response.body.error).not.toBe(undefined);
+                expect(response.body.error).toBe("Bad request. Make sure: The request body has properties username and body AND the article_id and username exist in articles and users respectively.");
             });
     });
 
@@ -259,7 +259,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             .send({ "usernameee": "lurker", "body": "new sauce" })
             .expect(400)
             .then((response) => {
-                expect(response.body.error).not.toBe(undefined);
+                expect(response.body.error).toBe("Bad request. Make sure: The request body has properties username and body AND the article_id and username exist in articles and users respectively.");
             });
     });
 
@@ -269,7 +269,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             .send({ "username": "lurker", "body": "new sauce" })
             .expect(400)
             .then((response) => {
-                expect(response.body.error).not.toBe(undefined);
+                expect(response.body.error).toBe("Bad request. Make sure: The request body has properties username and body AND the article_id and username exist in articles and users respectively.");
             });
     });
 
@@ -279,7 +279,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             .send({ "username": "alwaysalurker", "body": "new sauce" })
             .expect(400)
             .then((response) => {
-                expect(response.body.error).not.toBe(undefined);
+                expect(response.body.error).toBe("Bad request. Make sure: The request body has properties username and body AND the article_id and username exist in articles and users respectively.");
             });
     });
 });
