@@ -12,15 +12,16 @@ app.patch("/api/articles/:article_id", controller.patchArticle);
 app.get("/api/articles", controller.getAllArticles);
 app.get("/api/articles/:article_id/comments", controller.getAllComments);
 app.post("/api/articles/:article_id/comments", controller.postNewComment);
+app.delete("/api/comments/:comment_id", controller.deleteComment);
 
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).send('Server Error!');
 });
 
-// app.listen(5000, ()=>
-// {
-//     console.log("Listening on port 5000");
-// });
+app.listen(5000, ()=>
+{
+    console.log("Listening on port 5000");
+});
 
 module.exports = app;

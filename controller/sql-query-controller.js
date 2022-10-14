@@ -103,3 +103,10 @@ exports.postNewComment = async function (req, res, next) {
         catch (err) { next(err) }
     }
 }
+
+exports.deleteComment = async function (req, res, next)
+{
+    await model.queryDeleteComment(req.params.comment_id);
+    try { res.status(200).send({ "success": `Successfully deleted comment with id ${req.params.comment_id}` }) }
+    catch (err) { next(err) }
+}

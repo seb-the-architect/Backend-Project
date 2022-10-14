@@ -67,3 +67,8 @@ exports.queryPostNewComment = async function(article_id, newComment)
     
         return postedComment.rows[0];
 }
+
+exports.queryDeleteComment = async function(comment_id)
+{
+    await pool.query("DELETE FROM comments WHERE comment_id=$1", [comment_id]);
+}
