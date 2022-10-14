@@ -66,3 +66,5 @@ exports.queryPostNewComment = async function(article_id, newComment)
     
         return postedComment.rows[0];
 }
+
+//No new tests. Visual confirmation has been undertaken.
