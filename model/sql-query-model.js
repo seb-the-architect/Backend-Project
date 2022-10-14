@@ -47,10 +47,12 @@ exports.queryAllComments = async function(article_id)
     return allComments.rows;
 }
 
-exports.queryAllArticles = async function(topic)
+exports.queryAllArticles = async function(topic, sort_by, order)
 {
     const allArticles = await pool.query(
-        format("SELECT * FROM articles %s", (topic ? `WHERE topic='${topic}'` : "")));
+        format(`
+        SELECT * FROM articles %s
+        ORDER BY %s %s;`, (topic ? `WHERE topic='${topic}'` : ""), (sort_by ? sort_by : "date"), (order ? order : "ASC")));
     return allArticles.rows;
 }
 
